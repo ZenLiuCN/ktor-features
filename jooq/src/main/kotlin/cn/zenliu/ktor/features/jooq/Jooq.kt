@@ -6,6 +6,7 @@ import cn.zenliu.ktor.features.template.FeatureTemplate
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
+import org.jooq.DAO
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.conf.Settings
@@ -15,6 +16,7 @@ import java.sql.DriverManager
 import javax.sql.DataSource
 
 class Jooq {
+
     companion
     object Feature :
         FeatureTemplate.FeatureObjectTemplate<Application, Feature, Feature, Feature.JooqConf>() {
@@ -68,15 +70,24 @@ class Jooq {
             )
         }
         private val extra: MutableMap<String, DSLContext> = mutableMapOf()
+
         /**
          * fetch DslContext defined in [JooqConf.extra]
          * @param name String
          * @return DSLContext?
          */
-        fun extra(name: String) = extra[name] ?: config!!.extra[name]?.let {
-            createDSLWithPool(it).apply {
-                extra.put(name, this)
+        operator fun get(name: String = "ctx") = when {
+            name == "ctx" -> this.ctx
+            else -> extra[name] ?: config!!.extra[name]?.let {
+                createDSLWithPool(it).apply {
+                    extra.put(name, this)
+                }
             }
+        }
+
+        @Suppress("NOTHING_TO_INLINE")
+        inline fun <reified T : DAO<*, *, *>> get(name: String = "ctx") = get(name)?.let {
+            T::class.constructors.first().call(it.configuration())
         }
         /**
          * create DSL from parameter
