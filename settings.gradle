@@ -7,4 +7,5 @@ include ':graphlike'
 include ':redis'
 include ':template'
 include 'freeauth'
+include 'eventbus'
 
