@@ -40,38 +40,7 @@ shadowJar {
 }
 dependencies {
 
-    implementation "io.ktor:ktor-server-core:$ktor_version"
-    implementation "io.ktor:ktor-server-netty:$ktor_version"
-    implementation "ch.qos.logback:logback-classic:$logback_version"
-    implementation "io.ktor:ktor-server-host-common:$ktor_version"
-    implementation "io.ktor:ktor-metrics:$ktor_version"
-    implementation "io.ktor:ktor-websockets:$ktor_version"
-    implementation "io.ktor:ktor-jackson:$ktor_version"
-    implementation "io.ktor:ktor-auth:$ktor_version"
-//    implementation "org.msgpack:jackson-dataformat-msgpack:$msgpack_version"
-    implementation "io.lettuce:lettuce-core:$lettuce_version"
-    //FIXME:关闭指令类
-    compile "io.ktor:ktor-server-host-common:$ktor_version"
 
-    compileOnly 'io.swagger:swagger-annotations:1.5.20'
-    implementation "io.ktor:ktor-client-apache:$ktor_version"
-//    implementation "io.ktor:ktor-client-jackson:$ktor_version"
-
-    implementation "io.github.config4k:config4k:0.4.1"
-
-//    implementation "org.jooq:jooq:${jooqVersion}"
-//    implementation "com.zaxxer:HikariCP:$hikariVersion"
-//    implementation "org.postgresql:postgresql:$postgresVersion"
-//    implementation "joda-time:joda-time:2.10.1"
-
-    //implementation 'com.github.excitement-engineer:ktor-graphql:v0.2.1'
-
-    //implementation "com.expedia:graphql-kotlin:$graphKtVersion"
-    //implementation "com.graphql-java:graphql-java:$graphJavaVersion"
-
-//    implementation "com.github.pgutkowski:kgraphql:$kgrahVersion"
-
-//    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$kotlinx_coroutines_version"
 
     testImplementation "io.ktor:ktor-server-test-host:$ktor_version"
 
@@ -83,7 +52,7 @@ allprojects {
     apply plugin: 'kotlin'
     apply plugin: 'maven'
     group 'cn.zenliu.ktor.features'
-    version '1.0-SNAPSHOT'
+    version module_version
     repositories {
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://maven.aliyun.com/repository/jcenter' }
@@ -127,12 +96,12 @@ allprojects {
                 version this.version
 
             }
-        }.writeTo("pom.xml")
+        }.writeTo("$project.buildDir/pom.xml")
     }
     jar {
         dependsOn += createPom
         into("META-INF/maven/$project.group/$project.name") {
-            from('pom.xml')
+            from("$project.buildDir/pom.xml")
             rename ".*", "pom.xml"
         }
     }

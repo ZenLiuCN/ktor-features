@@ -1,4 +1,0 @@
-dependencies {
-    compileOnly "io.github.config4k:config4k:$config4k_version"
-    compileOnly "io.ktor:ktor-server-core:$ktor_version"
-}

@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(":template")
+    implementation project(":properties")
+    compileOnly "io.ktor:ktor-server-core:$ktor_version"
+    compileOnly "org.jooq:jooq:$jooq_version"
+    compileOnly "com.zaxxer:HikariCP:$hikariCP_version"
+}
