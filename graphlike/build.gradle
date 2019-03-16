@@ -6,3 +6,4 @@ dependencies {
     compileOnly "io.ktor:ktor-server-core:$ktor_version"
 
 }
+version='0.0.3'
