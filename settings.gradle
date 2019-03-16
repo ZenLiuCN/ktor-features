@@ -6,3 +6,5 @@ include ':properties'
 include ':graphlike'
 include ':redis'
 include ':template'
+include 'freeauth'
+

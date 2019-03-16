@@ -1,0 +1,7 @@
+dependencies {
+    implementation project(":template")
+    implementation project(":properties")
+    compileOnly "io.ktor:ktor-auth:$ktor_version"
+    compileOnly "io.ktor:ktor-server-core:$ktor_version"
+
+}
