@@ -1,7 +1,7 @@
 dependencies {
     implementation project(":template")
     implementation project(":properties")
-    compileOnly "io.github.config4k:config4k:$config4k_version"
+    implementation "io.github.config4k:config4k:$config4k_version"
     compileOnly "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
     compileOnly "io.ktor:ktor-server-core:$ktor_version"
 
