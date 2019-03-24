@@ -6,6 +6,7 @@ import cn.zenliu.ktor.features.template.FeatureTemplate
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.Application
+import org.jooq.Configuration
 import org.jooq.DAO
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
@@ -87,8 +88,12 @@ class Jooq {
 
         @Suppress("NOTHING_TO_INLINE")
         inline fun <reified T : DAO<*, *, *>> dao(name: String = "ctx") = get(name)?.let {
-            T::class.constructors.first().call(it.configuration())
+            T::class.constructors.find { it.parameters.size == 1 && it.parameters.first().type.classifier == Configuration::class }
+                ?.let { ctor ->
+                    ctor.call(it.configuration())
+                }
         }
+
         /**
          * create DSL from parameter
          * @param url String
@@ -145,6 +150,7 @@ class Jooq {
             SQLDialect.valueOf(source.dialect ?: this@Feature.config!!.dialect),
             settings
         )!!
+
         /**
          * create DSL from other datasource
          * @param ds DataSource

@@ -38,7 +38,7 @@ Jooq.get("ctx")?.resultQuery("SELECT 1").fetch() //use default DslContext
 Jooq.get("dictionary")?.resultQuery("SELECT 1").fetch() //use extra DslContext
 Jooq["ctx"]?.resultQuery("SELECT 1").fetch() //use default DslContext
 Jooq["dictionary"]?.resultQuery("SELECT 1").fetch() //use extra DslContext
-Jooq.get<Dao>("ctx")?.insert() //fast use dao
+Jooq.dao<Dao>("ctx")?.insert() //fast use dao
 ```
 ## notes
 
@@ -50,8 +50,8 @@ dependencies {
     implementation project(":features:template")
     implementation project(":features:properties")
     compileOnly "io.ktor:ktor-server-core:$ktor_version"
-    implementation "org.jooq:jooq:$jooq_version"
-    implementation "com.zaxxer:HikariCP:$hikariCP_version"
+    compileOnly "org.jooq:jooq:$jooq_version"
+    compileOnly "com.zaxxer:HikariCP:$hikariCP_version"
 }
 
 
