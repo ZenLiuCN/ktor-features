@@ -36,7 +36,7 @@ class FreeAuth {
         }
         internal var extractor: TokenExtractor = defualtExtractor
         fun challengeKey() = this.config!!.challengeKey
-        @Properties("auth")
+        @Properties("authnetication")
         class AuthProperties {
             var header: String = "token"
             var param: String = ""
