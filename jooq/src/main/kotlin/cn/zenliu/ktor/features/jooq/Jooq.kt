@@ -86,7 +86,7 @@ class Jooq {
         }
 
         @Suppress("NOTHING_TO_INLINE")
-        inline fun <reified T : DAO<*, *, *>> get(name: String = "ctx") = get(name)?.let {
+        inline fun <reified T : DAO<*, *, *>> dao(name: String = "ctx") = get(name)?.let {
             T::class.constructors.first().call(it.configuration())
         }
         /**
