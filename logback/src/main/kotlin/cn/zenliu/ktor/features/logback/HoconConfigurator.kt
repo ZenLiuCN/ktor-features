@@ -167,13 +167,15 @@ class HoconConfigurator : ContextAwareBase(), Configurator {
                     root.appendChild(knode)
                 }
                 ConfigValueType.LIST -> {
-                    this.getList(k).forEach {
-                        doc.createElement(k).let { knode ->
-                            knode.nodeValue = it.toString()
-                            root.appendChild(knode)
+                    when {
+                        k == "appender-ref" -> this.getList(k).map { it.unwrapped() as? String }.filterNotNull().map {
+                            doc.createElement(k).apply {
+                                setAttribute("ref", it)
+                            }
+                        }.forEach {
+                            root.appendChild(it)
                         }
                     }
-
                 }
                 ConfigValueType.NUMBER -> root.setAttribute(k, this.getNumber(k).toString())
                 ConfigValueType.BOOLEAN -> root.setAttribute(k, this.getBoolean(k).toString())
