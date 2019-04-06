@@ -1,24 +1,27 @@
 package cn.zenliu.ktor.features.logback
 
-import ch.qos.logback.classic.*
-import ch.qos.logback.classic.joran.*
-import ch.qos.logback.classic.spi.*
-import ch.qos.logback.core.*
-import ch.qos.logback.core.joran.util.*
-import ch.qos.logback.core.spi.*
-import com.fasterxml.jackson.databind.util.*
+import ch.qos.logback.classic.LoggerContext
+import ch.qos.logback.classic.joran.JoranConfigurator
+import ch.qos.logback.classic.spi.Configurator
+import ch.qos.logback.core.CoreConstants
+import ch.qos.logback.core.joran.util.ConfigurationWatchListUtil
+import ch.qos.logback.core.spi.ContextAwareBase
+import com.fasterxml.jackson.databind.util.ByteBufferBackedInputStream
+import com.fasterxml.jackson.databind.util.ByteBufferBackedOutputStream
 import com.typesafe.config.*
-import io.github.config4k.*
-import org.intellij.lang.annotations.*
-import org.w3c.dom.*
-import java.io.*
-import java.net.*
-import java.nio.*
-import java.util.concurrent.*
-import javax.xml.parsers.*
-import javax.xml.transform.*
-import javax.xml.transform.dom.*
-import javax.xml.transform.stream.*
+import io.github.config4k.extract
+import org.intellij.lang.annotations.Language
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import java.io.File
+import java.io.InputStream
+import java.net.URL
+import java.nio.ByteBuffer
+import java.util.concurrent.TimeUnit
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.transform.TransformerFactory
+import javax.xml.transform.dom.DOMSource
+import javax.xml.transform.stream.StreamResult
 
 
 class HoconConfigurator : ContextAwareBase(), Configurator {
@@ -125,11 +128,19 @@ class HoconConfigurator : ContextAwareBase(), Configurator {
                     val buf = ByteBuffer.allocate(1024 * 20)
                     TransformerFactory.newInstance().newTransformer()
                         .transform(DOMSource(doc), StreamResult(ByteBufferBackedOutputStream(buf)))
+                    if (System.getProperty("DEBUG_HOCON") != null) {
+                        File("HOCON.logback.debug.xml").apply {
+                            mkdirs()
+                            appendBytes(buf.array())
+                        }
+                    }
                     buf.flip() as ByteBuffer
                 }
             }
         }.let {
+
             ByteBufferBackedInputStream(it)
+
         }
 
 
