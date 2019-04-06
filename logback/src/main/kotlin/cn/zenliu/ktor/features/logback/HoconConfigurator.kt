@@ -128,18 +128,18 @@ class HoconConfigurator : ContextAwareBase(), Configurator {
                     val buf = ByteBuffer.allocate(1024 * 20)
                     TransformerFactory.newInstance().newTransformer()
                         .transform(DOMSource(doc), StreamResult(ByteBufferBackedOutputStream(buf)))
-                    if (System.getProperty("DEBUG_HOCON") != null) {
-                        File("HOCON.logback.debug.xml").apply {
-                            if (this.exists()) this.delete()
-                            this.createNewFile()
-                            this.appendText(Charsets.UTF_8.decode(buf.duplicate()).toString())
-                        }
-                    }
+
                     buf.flip() as ByteBuffer
                 }
             }
         }.let {
-
+            if (System.getProperty("DEBUG_HOCON") != null) {
+                File("HOCON.logback.debug.xml").apply {
+                    if (this.exists()) this.delete()
+                    this.createNewFile()
+                    this.appendText(Charsets.UTF_8.decode(it.duplicate()).toString())
+                }
+            }
             ByteBufferBackedInputStream(it)
 
         }

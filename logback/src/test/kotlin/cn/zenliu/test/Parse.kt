@@ -7,6 +7,7 @@ import com.typesafe.config.ConfigValueType
 import org.junit.jupiter.api.Test
 import org.w3c.dom.Document
 import org.w3c.dom.Element
+import java.io.File
 import java.nio.ByteBuffer
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.transform.TransformerFactory
@@ -41,11 +42,16 @@ class Parse {
                     val buf = ByteBuffer.allocate(1024 * 20)
                     TransformerFactory.newInstance().newTransformer()
                         .transform(DOMSource(doc), StreamResult(ByteBufferBackedOutputStream(buf)))
+
                     buf.flip() as ByteBuffer
                 }
             }
         }.let {
-
+            File("HOCON.logback.debug.xml").apply {
+                if (this.exists()) this.delete()
+                this.createNewFile()
+                this.appendText(Charsets.UTF_8.decode(it.duplicate()).toString())
+            }
             Charsets.UTF_8.decode(it.duplicate()).toString().apply {
                 println(Charsets.UTF_8.decode(it))
             }
