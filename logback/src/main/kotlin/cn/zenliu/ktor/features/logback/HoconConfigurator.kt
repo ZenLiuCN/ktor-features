@@ -130,9 +130,9 @@ class HoconConfigurator : ContextAwareBase(), Configurator {
                         .transform(DOMSource(doc), StreamResult(ByteBufferBackedOutputStream(buf)))
                     if (System.getProperty("DEBUG_HOCON") != null) {
                         File("HOCON.logback.debug.xml").apply {
-                            //                            parentFile.mkdirs()
-                            createNewFile()
-                            appendBytes(buf.array())
+                            if (this.exists()) this.delete()
+                            this.createNewFile()
+                            this.appendText(Charsets.UTF_8.decode(buf.duplicate()).toString())
                         }
                     }
                     buf.flip() as ByteBuffer
@@ -196,26 +196,29 @@ class HoconConfigurator : ContextAwareBase(), Configurator {
 
         @Language("HOCON")
         const val default = """
-   appenders: {
+logback {
+  appenders: {
     STDOUT: {
       class = "ch.qos.logback.core.ConsoleAppender"
-      encoder{
-      pattern.value = "%d{YYYY-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %green([%-4.30thread]) %blue(%logger{36}) %boldGreen(\\(%F:%line\\)) - %msg%n"
+      encoder {
+        pattern.value = "%d{YYYY-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %green([%-4.30thread]) %blue(%logger{36}) %boldGreen(\\(%F:%line\\)) - %msg%n"
       }
     }
   }
   root {
     level = INFO
-    appender-ref.ref= STDOUT
+    appender-ref=[STDOUT]
   }
-  loggers{
-    "ktor.application":{    level=INFO    }
-    "org.eclipse.jetty":{    level=INFO    }
-    "io.netty":{    level=INFO    }
-    "io.lettuce.core":{    level=INFO    }
-    "com.zaxxer":{    level=INFO    }
-    "org.jooq":{    level=INFO    }
+  loggers {
+    "ktor.application": {level = INFO}
+    "org.jooq.Constants": {level = ERROR}
+    "org.eclipse.jetty": {level = INFO}
+    "io.netty": {level = INFO}
+    "io.lettuce.core": {level = INFO}
+    "com.zaxxer": {level = INFO}
+    "org.jooq": {level = INFO}
   }
+}
 """
     }
 
