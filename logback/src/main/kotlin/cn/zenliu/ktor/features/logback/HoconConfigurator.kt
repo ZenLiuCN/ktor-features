@@ -131,6 +131,7 @@ class HoconConfigurator : ContextAwareBase(), Configurator {
                     if (System.getProperty("DEBUG_HOCON") != null) {
                         File("HOCON.logback.debug.xml").apply {
                             mkdirs()
+                            createNewFile()
                             appendBytes(buf.array())
                         }
                     }
