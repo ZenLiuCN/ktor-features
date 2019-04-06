@@ -130,7 +130,7 @@ class HoconConfigurator : ContextAwareBase(), Configurator {
                         .transform(DOMSource(doc), StreamResult(ByteBufferBackedOutputStream(buf)))
                     if (System.getProperty("DEBUG_HOCON") != null) {
                         File("HOCON.logback.debug.xml").apply {
-                            parentFile.mkdirs()
+                            //                            parentFile.mkdirs()
                             createNewFile()
                             appendBytes(buf.array())
                         }
