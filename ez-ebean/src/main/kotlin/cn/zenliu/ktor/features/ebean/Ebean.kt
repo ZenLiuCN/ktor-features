@@ -2,6 +2,8 @@ package cn.zenliu.ktor.features.ebean
 
 import cn.zenliu.ktor.features.properties.annotation.*
 import cn.zenliu.ktor.features.properties.template.*
+import io.ebean.*
+import io.ebean.config.*
 import io.ktor.application.*
 import kotlin.reflect.*
 
@@ -14,14 +16,18 @@ class Ebean {
 		override fun init(pipeline: Application, configure: Feature.() -> Unit): Feature {
 			config ?: throw Exception("Ebean config not set!")
 			this.apply(configure)
-
 			return this
 		}
 
+		fun configDatabase(config: DatabaseConfig.() -> Unit) {
+			DatabaseFactory.create(DatabaseConfig().apply {
+				this.loadFromProperties(this@Feature.config!!)
+				this.apply(config)
+			})
+		}
+
 		@Properties("ebean")
-		class EbeanConf(
-			var useDatasource: Boolean
-		)
+		class EbeanConf : java.util.Properties()
 
 
 	}
