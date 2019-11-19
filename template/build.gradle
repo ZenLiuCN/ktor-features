@@ -1,5 +1,0 @@
-dependencies {
-    implementation project(":properties")
-    compileOnly "io.ktor:ktor-server-core:$ktor_version"
-    compileOnly "ch.qos.logback:logback-classic:$logback_version"
-}

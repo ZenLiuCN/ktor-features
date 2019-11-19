@@ -1,7 +1,0 @@
-dependencies {
-    implementation project(":template")
-    implementation project(":properties")
-    compileOnly "io.ktor:ktor-server-core:$ktor_version"
-    compileOnly "com.fasterxml.jackson.core:jackson-databind:$jackson_version"
-    implementation  "io.lettuce:lettuce-core:$lettuce_version"
-}

@@ -1,8 +1,8 @@
 /.gradle
 out/
 build/
+target/
 *.iml
 *.ipr
 *.iws
 .idea/
-pom.xml
