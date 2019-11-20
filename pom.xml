@@ -21,7 +21,7 @@
         <ktor.version>1.2.5</ktor.version>
         <logback.version>1.2.3</logback.version>
         <config4k.version>0.4.1</config4k.version>
-        <jackson.version>2.9.10.1</jackson.version>
+        <jackson.version>2.10.1</jackson.version>
         <hikari.version>3.4.1</hikari.version>
         <lettuce.version>5.2.1.RELEASE</lettuce.version>
         <reactor.version>3.3.0.RELEASE</reactor.version>
