@@ -21,7 +21,7 @@ import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
 import javax.xml.transform.stream.StreamResult
 
-
+@Deprecated("use DirectHOCONCOnfigurator instead")
 class HoconConfigurator : ContextAwareBase(), Configurator {
     override fun configure(loggerContext: LoggerContext) {
         val configurator = JoranConfigurator()
