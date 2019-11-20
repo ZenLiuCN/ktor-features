@@ -1,8 +1,8 @@
 package cn.zenliu.ktor.features.auth
 
 
+import cn.zenliu.ktor.features.FeatureTemplate
 import cn.zenliu.ktor.features.properties.annotation.*
-import cn.zenliu.ktor.features.properties.template.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -13,25 +13,24 @@ import javax.naming.*
 
 class Auth {
 	companion
-	object Feature :
-		FeatureTemplate.FeatureObjectTemplate<Application, Feature, Feature, Feature.AuthProperties>() {
-		override val configClazz = Feature.AuthProperties::class
+	object AuthFeature :
+		FeatureTemplate.FeatureObjectTemplate<Application, AuthFeature, AuthFeature, AuthFeature.AuthProperties>() {
+		override val configClazz = AuthProperties::class
 
-		override fun init(pipeline: Application, configure: Feature.() -> Unit): Feature = run {
-			config ?: throw ConfigurationException("AuthProperties not configurated")
+		override fun init(pipeline: Application, configure: AuthFeature.() -> Unit): AuthFeature = run {
+			config ?: throw ConfigurationException("AuthProperties not config")
 			this.apply(configure)
 			this
 		}
 
-
-		internal val defualtExtractor: TokenExtractor = {
+		private val defaultExtractor: TokenExtractor = {
 			it.header(config!!.header)?.let {
 				HttpAuthHeader.tokenAuthChallenge(it)
 			} ?: it.queryParameters.get(config!!.param)?.let {
 				HttpAuthHeader.tokenAuthChallenge(it)
 			}
 		}
-		internal var extractor: TokenExtractor = defualtExtractor
+		internal var extractor: TokenExtractor = defaultExtractor
 		fun challengeKey() = this.config!!.challengeKey
 		fun setExtractor(extractor: TokenExtractor) {
 			this.extractor = extractor

@@ -1,4 +1,4 @@
-package cn.zenliu.ktor.features.properties.template
+package cn.zenliu.ktor.features
 
 
 import cn.zenliu.ktor.features.properties.manager.*

@@ -14,12 +14,65 @@
         <dependency>
             <groupId>cn.zenliu.ktor</groupId>
             <artifactId>properties</artifactId>
-            <version>${project.parent.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
+<!--            <version>${project.parent.version}</version>-->
         </dependency>
         <dependency>
             <groupId>io.ebean</groupId>
             <artifactId>ebean</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.zenliu.ktor</groupId>
+            <artifactId>ez-hikari</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+<!--            <version>${project.parent.version}</version>-->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.28.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>ebean-querybean</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>kotlin-querybean-generator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.ebean</groupId>
+            <artifactId>querybean-generator</artifactId>
+        </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>io.repaint.maven</groupId>
+                <artifactId>tiles-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
 
 </project>

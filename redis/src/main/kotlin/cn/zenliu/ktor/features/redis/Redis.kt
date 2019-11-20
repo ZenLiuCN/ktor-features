@@ -1,7 +1,7 @@
 package cn.zenliu.ktor.features.redis
 
+import cn.zenliu.ktor.features.FeatureTemplate
 import cn.zenliu.ktor.features.properties.annotation.*
-import cn.zenliu.ktor.features.properties.template.*
 import com.fasterxml.jackson.databind.*
 import io.ktor.application.*
 import io.lettuce.core.*
@@ -12,9 +12,9 @@ import java.nio.charset.*
 
 class Redis {
 	companion
-	object Feature :
-		FeatureTemplate.FeatureObjectTemplate<Application, Feature, Feature, Feature.RedisConf>() {
-		override val configClazz = Feature.RedisConf::class
+	object RedisFeature :
+		FeatureTemplate.FeatureObjectTemplate<Application, RedisFeature, RedisFeature, RedisFeature.RedisConf>() {
+		override val configClazz = RedisFeature.RedisConf::class
 		private val objectMapper: ObjectMapper = ObjectMapper()
 
 		@Properties("redis")
@@ -80,7 +80,7 @@ class Redis {
 
 		override fun init(
 			pipeline: Application,
-			configure: Feature.() -> Unit
+			configure: RedisFeature.() -> Unit
 		) = run {
 			config ?: throw Exception("datasource redis.url not set!")
 			this
