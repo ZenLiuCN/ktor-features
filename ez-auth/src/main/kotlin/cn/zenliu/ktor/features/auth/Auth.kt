@@ -11,7 +11,7 @@ import io.ktor.request.*
 import io.ktor.response.*
 import javax.naming.*
 
-class Auth {
+class Auth private constructor(){
 	companion
 	object AuthFeature :
 		FeatureTemplate.FeatureObjectTemplate<Application, AuthFeature, AuthFeature, AuthFeature.AuthProperties>() {

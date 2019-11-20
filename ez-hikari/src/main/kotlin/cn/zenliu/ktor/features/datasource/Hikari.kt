@@ -48,7 +48,7 @@ import kotlin.reflect.*
  * ```
  * @see HikariDataSource
  */
-class HikariCP {
+class Hikari private constructor() {
 	companion
 	object HikariCPFeature : FeatureTemplate.FeatureObjectTemplate<Application, HikariCPFeature, HikariCPFeature, HikariCPFeature.HikariConf>() {
 		override val configClazz: KClass<HikariConf> = HikariConf::class

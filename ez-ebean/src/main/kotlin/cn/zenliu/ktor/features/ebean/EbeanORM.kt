@@ -14,10 +14,10 @@ import java.util.*
 import kotlin.reflect.*
 
 /**
- *  EbeanDatabase feature
+ *  EbeanORM feature
  *  only load configuration from application.conf#ebean
  */
-class EbeanDatabase private constructor() {
+class EbeanORM private constructor() {
     companion
     object EbeanFeature : FeatureTemplate.FeatureObjectTemplate<Application, EbeanFeature, EbeanFeature, EbeanFeature.EbeanConf>() {
         override val configClazz: KClass<EbeanConf> = EbeanConf::class
@@ -57,6 +57,7 @@ class EbeanDatabase private constructor() {
                     ConfigValueType.BOOLEAN -> m.put(k, u.unwrapped().toString())
                     ConfigValueType.NULL -> Unit
                     ConfigValueType.STRING -> m.put(k, u.unwrapped() as String)
+	                else-> TODO()
                 }
             }
             m
