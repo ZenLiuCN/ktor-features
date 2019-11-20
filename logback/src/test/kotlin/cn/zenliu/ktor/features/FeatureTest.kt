@@ -21,8 +21,8 @@ internal class FeatureTest {
         ) {
             LoggerFactory.getLogger("test")
                     .let {
-                        it.isInfoEnabled.apply(::println)
                         assert(!it.isInfoEnabled)
+	                    it.error("this should be displayed")
                     }
         }
     }
