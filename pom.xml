@@ -14,7 +14,6 @@
     <groupId>cn.zenliu.ktor</groupId>
     <artifactId>ktor-features</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
     <properties>
         <java.version>1.8</java.version>
         <kotlin.version>1.3.60</kotlin.version>
@@ -33,6 +32,10 @@
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>kotlinx</id>
+            <url>https://kotlin.bintray.com/kotlinx</url>
         </repository>
     </repositories>
     <dependencyManagement>
