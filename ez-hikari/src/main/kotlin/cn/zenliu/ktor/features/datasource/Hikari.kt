@@ -5,6 +5,7 @@ import cn.zenliu.ktor.features.properties.annotation.*
 import cn.zenliu.ktor.features.properties.manager.PropertiesManager
 import com.zaxxer.hikari.*
 import io.ktor.application.*
+import io.ktor.util.AttributeKey
 import java.time.Duration
 import kotlin.reflect.*
 
@@ -56,7 +57,7 @@ class Hikari private constructor() {
 			pipeline.attributes.computeIfAbsent(PropertiesManager.key){
 				pipeline.install(PropertiesManager)
 			}
-			config ?: throw Exception("datasource url not set!")
+			config ?: throw Exception("hikari configuration invalid!")
 			this.apply(configure)
 			return this
 		}

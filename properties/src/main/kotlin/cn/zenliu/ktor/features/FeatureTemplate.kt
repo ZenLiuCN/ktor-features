@@ -21,6 +21,12 @@ abstract class FeatureTemplate<C : Any>(val conf: C) {
 		abstract fun init(pipeline: P, configure: C.() -> Unit): F
 		override fun install(pipeline: P, configure: C.() -> Unit): F =
 			init(pipeline, configure).apply {
+				//register attributes
+				if(pipeline.attributes.contains(key)){
+					pipeline.attributes.put(AttributeKey("${key.name}_${this.hashCode()}"),this)
+				}else{
+					pipeline.attributes.put(key,this)
+				}
 				this@FeatureObjectTemplate._factory = this
 			}
 	}

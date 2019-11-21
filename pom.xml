@@ -10,6 +10,7 @@
         <module>ez-hikari</module>
         <module>ez-ebean</module>
         <module>logback</module>
+        <module>ez-liquibase</module>
     </modules>
     <groupId>cn.zenliu.ktor</groupId>
     <artifactId>ktor-features</artifactId>
@@ -26,6 +27,10 @@
         <lettuce.version>5.2.1.RELEASE</lettuce.version>
         <reactor.version>3.3.0.RELEASE</reactor.version>
         <reactor-kotlin.version>1.0.0.RELEASE</reactor-kotlin.version>
+        <liquibase.version>3.8.1</liquibase.version>
+        <jooq.version>3.12.1</jooq.version>
+        <snakeyaml.version>1.12</snakeyaml.version>
+
 
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -42,6 +47,7 @@
     </repositories>
     <dependencyManagement>
         <dependencies>
+            <!--            kt-->
             <dependency>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-reflect</artifactId>
@@ -54,6 +60,14 @@
                 <version>${kotlin.version}</version>
                 <scope>provided</scope>
             </dependency>
+
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-test</artifactId>
+                <version>${kotlin.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <!--            ebean-->
             <dependency>
                 <groupId>io.ebean</groupId>
                 <artifactId>ebean</artifactId>
@@ -64,11 +78,6 @@
                 <artifactId>ebean-querybean</artifactId>
                 <version>${ebean.version}</version>
             </dependency>
-            <!--            <dependency>
-                            <groupId>io.ebean</groupId>
-                            <artifactId>ebean-spring-txn</artifactId>
-                            <version>${ebean.version}</version>
-                        </dependency>-->
             <dependency>
                 <groupId>io.ebean</groupId>
                 <artifactId>kotlin-querybean-generator</artifactId>
@@ -87,6 +96,7 @@
                 <version>${ebean.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!--            ktor-->
             <dependency>
                 <groupId>io.ktor</groupId>
                 <artifactId>ktor-server-core</artifactId>
@@ -109,65 +119,6 @@
                         <artifactId>kotlin-stdlib-common</artifactId>
                     </exclusion>
                 </exclusions>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.projectreactor</groupId>
-                <artifactId>reactor-core</artifactId>
-                <version>${reactor.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.projectreactor.kotlin</groupId>
-                <artifactId>reactor-kotlin-extensions</artifactId>
-                <version>${reactor-kotlin.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.module</groupId>
-                <artifactId>jackson-module-kotlin</artifactId>
-                <version>${jackson.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.github.config4k</groupId>
-                <artifactId>config4k</artifactId>
-                <version>${config4k.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.jetbrains.kotlin</groupId>
-                        <artifactId>kotlin-stdlib</artifactId>
-                    </exclusion>
-                </exclusions>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.zaxxer</groupId>
-                <artifactId>HikariCP</artifactId>
-                <version>${hikari.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.jooq</groupId>
-                <artifactId>jooq</artifactId>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.lettuce</groupId>
-                <artifactId>lettuce-core</artifactId>
-                <version>${lettuce.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -227,13 +178,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>5.5.2</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
                 <groupId>io.ktor</groupId>
                 <artifactId>ktor-server-netty</artifactId>
                 <version>${ktor.version}</version>
@@ -261,11 +205,94 @@
                 </exclusions>
                 <scope>test</scope>
             </dependency>
+            <!--            reactor-->
             <dependency>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-test</artifactId>
-                <version>${kotlin.version}</version>
-                <scope>test</scope>
+                <groupId>io.projectreactor</groupId>
+                <artifactId>reactor-core</artifactId>
+                <version>${reactor.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.projectreactor.kotlin</groupId>
+                <artifactId>reactor-kotlin-extensions</artifactId>
+                <version>${reactor-kotlin.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!--            jackson-->
+            <dependency>
+                <groupId>com.fasterxml.jackson.module</groupId>
+                <artifactId>jackson-module-kotlin</artifactId>
+                <version>${jackson.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!--            logback-->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!--            config4k-->
+            <dependency>
+                <groupId>io.github.config4k</groupId>
+                <artifactId>config4k</artifactId>
+                <version>${config4k.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.jetbrains.kotlin</groupId>
+                        <artifactId>kotlin-stdlib</artifactId>
+                    </exclusion>
+                </exclusions>
+                <scope>provided</scope>
+            </dependency>
+            <!--            hikari-->
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${hikari.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!--            jooq-->
+            <dependency>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq</artifactId>
+                <version>${jooq.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!--            lettuce-->
+            <dependency>
+                <groupId>io.lettuce</groupId>
+                <artifactId>lettuce-core</artifactId>
+                <version>${lettuce.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <!--junit-->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>5.5.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--            liquibase-->
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+                <scope>provided</scope>
+                <optional>true</optional>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -367,11 +394,11 @@
                         <jvmTarget>1.8</jvmTarget>
                         <args>
                             <arg>-Xjsr305=strict</arg>
-<!--                            <arg>-Xcoroutines=enable</arg>-->
+                            <!--                            <arg>-Xcoroutines=enable</arg>-->
                         </args>
-                         <compilerPlugins>
-                             <plugin>all-open</plugin>
-                         </compilerPlugins>
+                        <compilerPlugins>
+                            <plugin>all-open</plugin>
+                        </compilerPlugins>
                     </configuration>
                     <dependencies>
                         <dependency>
