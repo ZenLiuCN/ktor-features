@@ -7,7 +7,7 @@ import io.github.config4k.*
 import io.ktor.application.*
 import kotlin.reflect.*
 
-typealias CaffeineConf = MutableMap<String, String>
+typealias CaffeineConf = Map<String, String>
 
 class CaffeineManager private constructor() {
 	companion
@@ -25,9 +25,8 @@ class CaffeineManager private constructor() {
 
 
 		override val config: CaffeineConf?
-			get() = PropertiesManager.dump()?.getConfig("caffeine")?.let {
-				it.root().keys.map { k -> k to it.extract<String>(k) }.toMap()
-			} as? CaffeineConf
+			get() = PropertiesManager.extract("caffeine")
+//			get() = PropertiesManager.properties<Map<String,String>>("caffeine")
 
 		data class CaffeineCache(
 			val spec: String,
