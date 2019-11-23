@@ -16,8 +16,8 @@ abstract class FeatureTemplate<C : Any>(val conf: C) {
 		val factory by lazy { _factory }
 		override val key: AttributeKey<F> =
 			AttributeKey<F>(this::class.simpleName ?: "factory.${System.currentTimeMillis()}")
-		protected abstract val configClazz: KClass<CONF>
-		protected val config: CONF? by lazy { PropertiesManager.properties(configClazz) }
+		protected abstract val configClazz: KClass<out CONF>
+		protected open val config: CONF? by lazy { PropertiesManager.properties(configClazz) }
 		abstract fun init(pipeline: P, configure: C.() -> Unit): F
 		override fun install(pipeline: P, configure: C.() -> Unit): F =
 			init(pipeline, configure).apply {

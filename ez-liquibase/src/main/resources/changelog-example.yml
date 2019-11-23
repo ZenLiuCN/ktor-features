@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - property:
+      name: jsonType
+      value: json
+      dbms: mysql,postgresql,oracle,mssql
+  - property:
+      name: jsonType
+      value: text
+      dbms: h2,sqlite,derby
+  - includeAll:
+      path: schema
+      relativeToChangelogFile: true
