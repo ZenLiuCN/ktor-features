@@ -15,7 +15,7 @@ internal class FeatureTest {
 					buildCache<String,Any>("cache1"){
 						it
 					}
-					buildCache<String,Any>("cache2")
+					buildCache<String,Any>("cache2",true)
 				}
 			}
 		) {
