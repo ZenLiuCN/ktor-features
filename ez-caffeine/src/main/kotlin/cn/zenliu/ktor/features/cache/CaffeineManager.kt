@@ -78,15 +78,15 @@ class CaffeineManager private constructor() {
 		}
 
 		@Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
-		inline fun <K, V> fetchCache(name: String) = caches[name] as? Cache<K, V>
+		 fun <K, V> fetchCache(name: String) = caches[name] as? Cache<K, V>
 
 		@Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
-		inline fun <K, V> fetchLoadingCache(name: String) = loadingCaches[name] as? LoadingCache<K, V>
+		 fun <K, V> fetchLoadingCache(name: String) = loadingCaches[name] as? LoadingCache<K, V>
 
 		@Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
-		inline fun <K, V> fetchAsyncCache(name: String) = asyncCaches[name] as? AsyncCache<K, V>
+		 fun <K, V> fetchAsyncCache(name: String) = asyncCaches[name] as? AsyncCache<K, V>
 
 		@Suppress("UNCHECKED_CAST", "NOTHING_TO_INLINE")
-		inline fun <K, V> fetchAsyncLoadingCache(name: String) = asyncLoadingCaches[name] as? AsyncLoadingCache<K, V>
+		 fun <K, V> fetchAsyncLoadingCache(name: String) = asyncLoadingCaches[name] as? AsyncLoadingCache<K, V>
 	}
 }
