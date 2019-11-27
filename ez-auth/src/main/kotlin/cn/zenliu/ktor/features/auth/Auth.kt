@@ -3,6 +3,8 @@ package cn.zenliu.ktor.features.auth
 
 import cn.zenliu.ktor.features.FeatureTemplate
 import cn.zenliu.ktor.features.properties.annotation.*
+import cn.zenliu.ktor.features.properties.manager.PropertiesManager
+import io.github.config4k.extract
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*
@@ -18,16 +20,19 @@ class Auth private constructor(){
 		override val configClazz = AuthProperties::class
 
 		override fun init(pipeline: Application, configure: AuthFeature.() -> Unit): AuthFeature = run {
-			config ?: throw ConfigurationException("AuthProperties not config")
+			pipeline.attributes.computeIfAbsent(PropertiesManager.key) {
+				pipeline.install(PropertiesManager)
+			}
+			this.config ?: throw ConfigurationException("AuthProperties not config")
 			this.apply(configure)
 			this
 		}
 
 		private val defaultExtractor: TokenExtractor = {
 			it.header(config!!.header)?.let {
-				HttpAuthHeader.tokenAuthChallenge(it)
+				HttpAuthHeader.tokenAuthChallenge(it+"=")
 			} ?: it.queryParameters.get(config!!.param)?.let {
-				HttpAuthHeader.tokenAuthChallenge(it)
+				HttpAuthHeader.tokenAuthChallenge(it+"=")
 			}
 		}
 		internal var extractor: TokenExtractor = defaultExtractor
@@ -36,12 +41,13 @@ class Auth private constructor(){
 			this.extractor = extractor
 		}
 
+
 		@Properties("authenticate")
-		class AuthProperties {
-			var header: String = "token"
-			var param: String = "token"
-			var challengeKey: String = "TokenAuth"
-		}
+		class AuthProperties (
+				var header: String = "token",
+				var param: String = "token",
+				var challengeKey: String = "TokenAuth"
+		)
 
 	}
 }
@@ -95,7 +101,7 @@ fun ApplicationRequest.tokenAuthenticationCredentials(): UserTokenPrincipal? {
 	when (parsed) {
 		is HttpAuthHeader.Single -> when {
 			!parsed.authScheme.equals(Auth.challengeKey(), ignoreCase = true) -> return null
-			else -> return UserTokenPrincipal(parsed.blob)
+			else -> return UserTokenPrincipal(parsed.blob.removeSuffix("="))
 		}
 		else -> return null
 	}
