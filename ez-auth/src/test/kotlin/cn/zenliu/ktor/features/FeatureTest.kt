@@ -41,9 +41,9 @@ internal class FeatureTest {
 			}
 		) {
 				val call=handleRequest(HttpMethod.Get,"/") {
-					addHeader("auth","2=")
+					addHeader("authIt","2")
 				}
-				call.response
+				assert(call.response.content=="!")
 		}
 	}
 
