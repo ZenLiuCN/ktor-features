@@ -2,6 +2,7 @@ package cn.zenliu.ktor.features.redis
 
 import cn.zenliu.ktor.features.FeatureTemplate
 import cn.zenliu.ktor.features.properties.annotation.*
+import cn.zenliu.ktor.features.properties.manager.*
 import com.fasterxml.jackson.databind.*
 import io.ktor.application.*
 import kotlinx.io.core.*
@@ -42,6 +43,9 @@ class Kmongo {
 			pipeline: Application,
 			configure: KmongoFeature.() -> Unit
 		) = run {
+			pipeline.attributes.computeIfAbsent(PropertiesManager.key){
+				pipeline.install(PropertiesManager)
+			}
 			config ?: throw Exception("datasource mongo.conn not set!")
 			this
 		}
