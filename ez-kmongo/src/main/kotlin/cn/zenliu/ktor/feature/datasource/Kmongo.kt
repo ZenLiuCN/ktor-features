@@ -1,4 +1,4 @@
-package cn.zenliu.ktor.features.redis
+package cn.zenliu.ktor.features.datasource
 
 import cn.zenliu.ktor.features.FeatureTemplate
 import cn.zenliu.ktor.features.properties.annotation.*
@@ -34,8 +34,9 @@ class Kmongo {
 		}
 
 		val client by lazy {
-			KMongo.createClient(config!!.conn).coroutine
+			KMongo.createClient(config!!.conn)
 		}
+		val coroutineClient by lazy { client.coroutine }
 		fun newClient(conn: String)=KMongo.createClient(conn)
 		fun newClient(conn: com.mongodb.ConnectionString)=KMongo.createClient(conn)
 		fun newClient(connSetting: com.mongodb.MongoClientSettings)=KMongo.createClient(connSetting)
