@@ -9,7 +9,7 @@ import io.ktor.util.pipeline.*
 import java.util.concurrent.*
 import kotlin.reflect.*
 
-class EbeanIdProvider private constructor() {
+class EbeanProvider private constructor() {
 	companion
 	object Feature : FeatureTemplate.FeatureObjectTemplate<Application, Feature, Feature, Feature.Conf>() {
 		override val configClazz: KClass<Conf> = Conf::class
@@ -39,7 +39,7 @@ class EbeanIdProvider private constructor() {
 						currentTenantProvider?.remove()
 					}
 				}
-				else->throw Throwable("not create currentUserProvider or currentTenantProvider!!")
+				else -> throw Throwable("not create currentUserProvider or currentTenantProvider!!")
 			}
 
 			return this
@@ -94,17 +94,16 @@ class EbeanIdProvider private constructor() {
 		private var currentUserProvider: ThreadUserProvider<Any>? = null
 		private var currentTenantProvider: ThreadTenantProvider<Any>? = null
 
-		fun createUserProvider(default: Any?, debug: Boolean = false) = if (currentUserProvider != null)
-			throw Throwable("already created CurrentUserProvider")
-		else {
-			currentUserProvider = ThreadUserProvider(default, debug)
-		}
+		fun createUserProvider(default: Any?, debug: Boolean = false) =
+			if (currentUserProvider == null)
+				currentUserProvider = ThreadUserProvider(default, debug)
+			else Unit
 
-		fun createTenantProvider(default: Any?, debug: Boolean = false) = if (currentTenantProvider != null)
-			throw Throwable("already created CurrentUserProvider")
-		else {
-			currentTenantProvider = ThreadTenantProvider(default, debug)
-		}
+
+		fun createTenantProvider(default: Any?, debug: Boolean = false) =
+			if (currentTenantProvider == null)
+				currentTenantProvider = ThreadTenantProvider(default, debug)
+			else Unit
 
 		fun setUserId(id: Any) = currentUserProvider?.set(id)
 		fun setTenantId(id: Any) = currentTenantProvider?.set(id)

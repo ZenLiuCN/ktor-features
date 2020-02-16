@@ -10,21 +10,21 @@ import java.time.*
 
 fun Application.main() {
 	install(Hikari)
-	install(EbeanIdProvider) {
+	install(EbeanProvider) {
 		createUserProvider(0L)
 		//createTenantProvider(0L)
 	}
 	install(EbeanORM) {
 		this.configEbean {
 			this.dataSource = Hikari.datasource
-			this.currentTenantProvider = EbeanIdProvider.getCurrentTenantProvider()
-			this.currentUserProvider = EbeanIdProvider.getCurrentUserProvider()
+			this.currentTenantProvider = EbeanProvider.getCurrentTenantProvider()
+			this.currentUserProvider = EbeanProvider.getCurrentUserProvider()
 		}
 	}
 	routing {
 		put("/user/{name}") {
 			val id = Instant.now().epochSecond
-			EbeanIdProvider.setUserId(id)
+			EbeanProvider.setUserId(id)
 			UserUsecase.create(name = call.parameters["name"]!!).let {
 				assert(it.createdBy == id)
 				assert(it.modifiedBy == id)
