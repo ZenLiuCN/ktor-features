@@ -1,12 +1,11 @@
 package cn.zenliu.ktor.features.datasource
 
-import cn.zenliu.ktor.features.FeatureTemplate
+import cn.zenliu.ktor.features.*
 import cn.zenliu.ktor.features.properties.annotation.*
-import cn.zenliu.ktor.features.properties.manager.PropertiesManager
+import cn.zenliu.ktor.features.properties.manager.*
 import com.zaxxer.hikari.*
 import io.ktor.application.*
-import io.ktor.util.AttributeKey
-import java.time.Duration
+import java.time.*
 import kotlin.reflect.*
 
 /**

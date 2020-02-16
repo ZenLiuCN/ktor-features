@@ -1,17 +1,12 @@
 package cn.zenliu.ktor.features
 
 
-import cn.zenliu.ktor.features.auth.Auth
-import cn.zenliu.ktor.features.auth.token
+import cn.zenliu.ktor.features.auth.*
 import io.ktor.application.*
-import io.ktor.auth.Authentication
-import io.ktor.auth.UserIdPrincipal
-import io.ktor.auth.authenticate
-import io.ktor.http.HttpMethod
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.get
-import io.ktor.routing.routing
+import io.ktor.auth.*
+import io.ktor.http.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import io.ktor.server.testing.*
 import org.junit.jupiter.api.*
 

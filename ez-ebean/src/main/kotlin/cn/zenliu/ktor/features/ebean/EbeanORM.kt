@@ -1,16 +1,12 @@
 package cn.zenliu.ktor.features.ebean
 
-import cn.zenliu.ktor.features.FeatureTemplate
+import cn.zenliu.ktor.features.*
 import cn.zenliu.ktor.features.properties.annotation.*
-import cn.zenliu.ktor.features.properties.annotation.Properties
-import cn.zenliu.ktor.features.properties.manager.PropertiesManager
+import cn.zenliu.ktor.features.properties.manager.*
 import com.typesafe.config.*
 import io.ebean.*
 import io.ebean.config.*
-import io.github.config4k.extract
 import io.ktor.application.*
-import java.io.*
-import java.util.*
 import kotlin.reflect.*
 
 /**

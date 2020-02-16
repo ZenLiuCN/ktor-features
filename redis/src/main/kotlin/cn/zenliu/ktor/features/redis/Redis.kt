@@ -1,12 +1,11 @@
 package cn.zenliu.ktor.features.redis
 
-import cn.zenliu.ktor.features.FeatureTemplate
+import cn.zenliu.ktor.features.*
 import cn.zenliu.ktor.features.properties.annotation.*
 import com.fasterxml.jackson.databind.*
 import io.ktor.application.*
 import io.lettuce.core.*
 import io.lettuce.core.codec.*
-import kotlinx.io.core.*
 import java.nio.*
 import java.nio.charset.*
 

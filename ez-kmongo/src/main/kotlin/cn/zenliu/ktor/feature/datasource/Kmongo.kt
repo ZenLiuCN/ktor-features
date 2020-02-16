@@ -1,14 +1,12 @@
 package cn.zenliu.ktor.features.datasource
 
-import cn.zenliu.ktor.features.FeatureTemplate
+import cn.zenliu.ktor.features.*
 import cn.zenliu.ktor.features.properties.annotation.*
 import cn.zenliu.ktor.features.properties.manager.*
 import com.fasterxml.jackson.databind.*
 import io.ktor.application.*
-import kotlinx.io.core.*
-import org.litote.kmongo.reactivestreams.*  //NEEDED! import KMongo reactivestreams extensions
-import org.litote.kmongo.coroutine.* //NEEDED! import KMongo coroutine extensions
-
+import org.litote.kmongo.coroutine.*
+import org.litote.kmongo.reactivestreams.*
 import java.nio.*
 import java.nio.charset.*
 
@@ -37,20 +35,19 @@ class Kmongo {
 			KMongo.createClient(config!!.conn)
 		}
 		val coroutineClient by lazy { client.coroutine }
-		fun newClient(conn: String)=KMongo.createClient(conn)
-		fun newClient(conn: com.mongodb.ConnectionString)=KMongo.createClient(conn)
-		fun newClient(connSetting: com.mongodb.MongoClientSettings)=KMongo.createClient(connSetting)
+		fun newClient(conn: String) = KMongo.createClient(conn)
+		fun newClient(conn: com.mongodb.ConnectionString) = KMongo.createClient(conn)
+		fun newClient(connSetting: com.mongodb.MongoClientSettings) = KMongo.createClient(connSetting)
 		override fun init(
 			pipeline: Application,
 			configure: KmongoFeature.() -> Unit
 		) = run {
-			pipeline.attributes.computeIfAbsent(PropertiesManager.key){
+			pipeline.attributes.computeIfAbsent(PropertiesManager.key) {
 				pipeline.install(PropertiesManager)
 			}
 			config ?: throw Exception("datasource mongo.conn not set!")
 			this
 		}
-
 
 
 		private

@@ -4,10 +4,9 @@ package cn.zenliu.ktor.features
 
 
 import cn.zenliu.ktor.features.datasource.*
-import io.ktor.application.install
-
-import io.ktor.server.testing.withTestApplication
-import org.junit.jupiter.api.Test
+import io.ktor.application.*
+import io.ktor.server.testing.*
+import org.junit.jupiter.api.*
 
 internal class FeatureTest {
     @Test

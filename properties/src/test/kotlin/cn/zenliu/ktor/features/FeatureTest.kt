@@ -1,17 +1,11 @@
 package cn.zenliu.ktor.features
 
 
-import cn.zenliu.ktor.features.properties.manager.PropertiesManager
-import com.typesafe.config.Config
-import io.github.config4k.toConfig
-import io.ktor.application.install
-
-import io.ktor.server.testing.withTestApplication
-import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestTemplate
-import java.util.*
-import kotlin.collections.HashMap
+import cn.zenliu.ktor.features.properties.manager.*
+import com.typesafe.config.*
+import io.ktor.application.*
+import io.ktor.server.testing.*
+import org.junit.jupiter.api.*
 
 internal class FeatureTest{
     @Test

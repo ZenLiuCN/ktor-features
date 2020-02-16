@@ -6,7 +6,6 @@ import ch.qos.logback.classic.spi.*
 import ch.qos.logback.core.*
 import ch.qos.logback.core.joran.util.*
 import ch.qos.logback.core.spi.*
-import cn.zenliu.ktor.features.logback.DirectHOCONConfigurator.Companion.convertInto
 import com.typesafe.config.*
 import org.intellij.lang.annotations.*
 import org.w3c.dom.*

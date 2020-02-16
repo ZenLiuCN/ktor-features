@@ -1,29 +1,20 @@
 package cn.zenliu.ktor.features.datasource
 
-import cn.zenliu.ktor.features.FeatureTemplate
-import cn.zenliu.ktor.features.properties.annotation.Properties
-import cn.zenliu.ktor.features.properties.manager.PropertiesManager
-import io.ktor.application.Application
-import io.ktor.application.ApplicationCallPipeline
-import io.ktor.application.install
-import io.ktor.util.AttributeKey
-import liquibase.Contexts
-import liquibase.LabelExpression
+import cn.zenliu.ktor.features.*
+import cn.zenliu.ktor.features.properties.annotation.*
+import cn.zenliu.ktor.features.properties.manager.*
+import io.ktor.application.*
+import liquibase.*
 import liquibase.Liquibase
-import liquibase.configuration.GlobalConfiguration
-import liquibase.configuration.LiquibaseConfiguration
-import liquibase.database.DatabaseFactory
-import liquibase.database.OfflineConnection
-import liquibase.database.jvm.JdbcConnection
-import liquibase.logging.LogService
-import liquibase.logging.LogType
-import liquibase.resource.ClassLoaderResourceAccessor
-import liquibase.resource.ResourceAccessor
-import java.io.File
-import java.io.OutputStreamWriter
-import java.sql.Connection
-import javax.sql.DataSource
-import kotlin.reflect.KClass
+import liquibase.configuration.*
+import liquibase.database.*
+import liquibase.database.jvm.*
+import liquibase.logging.*
+import liquibase.resource.*
+import java.io.*
+import java.sql.*
+import javax.sql.*
+import kotlin.reflect.*
 
 
 class Liquibase private constructor() {

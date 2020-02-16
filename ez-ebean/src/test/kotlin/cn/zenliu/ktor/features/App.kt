@@ -7,7 +7,6 @@ import io.ktor.application.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import java.time.*
-import kotlin.random.*
 
 fun Application.main() {
 	install(Hikari)

@@ -1,9 +1,9 @@
 package cn.zenliu.ktor.features.auth
 
 
-import cn.zenliu.ktor.features.FeatureTemplate
+import cn.zenliu.ktor.features.*
 import cn.zenliu.ktor.features.properties.annotation.*
-import cn.zenliu.ktor.features.properties.manager.PropertiesManager
+import cn.zenliu.ktor.features.properties.manager.*
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.http.*

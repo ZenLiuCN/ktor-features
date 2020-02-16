@@ -3,7 +3,6 @@ package cn.zenliu.ktor.features.cache
 import cn.zenliu.ktor.features.*
 import cn.zenliu.ktor.features.properties.manager.*
 import com.github.benmanes.caffeine.cache.*
-import io.github.config4k.*
 import io.ktor.application.*
 import kotlin.reflect.*
 
