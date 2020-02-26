@@ -10,6 +10,7 @@ import java.time.format.*
 import java.util.zip.*
 import javax.sql.*
 
+
 /**
  * useable util for ebean
  * current is just migration generate for liquibase
@@ -100,8 +101,9 @@ object EbeanUtil {
 									}?.use { os ->
 										old.filter { it.isFile }.forEach {
 											os.putNextEntry(ZipEntry(it.name))
-											os.write(it.inputStream().readBytes())
+											os.write(it.readBytes())
 											os.closeEntry()
+											it.delete()
 										}
 									}
 							}
