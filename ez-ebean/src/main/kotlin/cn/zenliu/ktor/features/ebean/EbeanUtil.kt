@@ -87,7 +87,7 @@ object EbeanUtil {
 					-- liquibase formatted sql
 					-- changeset {changeset}
 					""".trimIndent()
-				setHeader(header.replace("{chagneset}",changeset))
+				setHeader(header.replace("{changeset}",changeset))
 				setName(changeSetName)
 				setVersion("$majorVersion.$minorVersion.$typeNumber")
 				resourcePath?.let { setPathToResources(File(it).absolutePath) }
