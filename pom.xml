@@ -5,11 +5,11 @@
     <packaging>pom</packaging>
     <modules>
         <module>properties</module>
-        <module>redis</module>
+        <module>ez-redis</module>
         <module>ez-auth</module>
         <module>ez-hikari</module>
         <module>ez-ebean</module>
-        <module>logback</module>
+        <module>ez-logback</module>
         <module>ez-liquibase</module>
         <module>ez-caffeine</module>
         <module>ez-kmongo</module>
