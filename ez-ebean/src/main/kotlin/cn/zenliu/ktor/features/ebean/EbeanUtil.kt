@@ -44,6 +44,7 @@ object EbeanUtil {
 	 *    </resources>
 	 *  </build>
 	 *  ```
+	 *  header template can be config with property [EbeanUtil.generateLiquibaseChangeLog.header] with place holder `{changeset}`
 	 * @param user String  liquibase author
 	 * @param changeSetName String liquibase changeset name
 	 * @param majorVersion Int  finnal file name will be majorVersion.minorVersion.typeNumber__changeSetName.sql
@@ -79,12 +80,14 @@ object EbeanUtil {
 		DbMigration.create()
 			.apply {
 				platform?.let { setPlatform(platform) }
-				setHeader(
-				"""
-				-- this is generated form ktor-features:EbeanUtil should not edit
-				-- liquibase formatted sql
-				-- changeset $user-${now("YYYYMMdd")}:$changeSetName
-				""".trimIndent())
+				val changeset="$user-${now("YYYYMMdd")}:$changeSetName"
+				val header= System.getProperty("EbeanUtil.generateLiquibaseChangeLog.header")?.takeIf { it.isNotBlank() }
+					?:"""
+					-- THIS IS GENERATED FORM KTOR-FEATURES:EBEANUTIL SHOULD NOT EDIT
+					-- liquibase formatted sql
+					-- changeset {changeset}
+					""".trimIndent()
+				setHeader(header.replace("{chagneset}",changeset))
 				setName(changeSetName)
 				setVersion("$majorVersion.$minorVersion.$typeNumber")
 				resourcePath?.let { setPathToResources(File(it).absolutePath) }
