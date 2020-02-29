@@ -83,9 +83,9 @@ object EbeanUtil {
 				val changeset="$user-${now("YYYYMMdd")}:$changeSetName"
 				val header= System.getProperty("EbeanUtil.generateLiquibaseChangeLog.header")?.takeIf { it.isNotBlank() }
 					?:"""
-					-- THIS IS GENERATED FORM KTOR-FEATURES:EBEANUTIL SHOULD NOT EDIT
-					-- liquibase formatted sql
-					-- changeset {changeset}
+					--liquibase formatted sql
+					--changeset {changeset}
+					-- THIS IS GENERATED FORM KTOR-FEATURES:EBEANUTIL SHOULD NOT EDIT: !! PLZ check must have --liquibase formatted sql  (--WITHOUT SPACE MUST HAVE IT WITH MYSQL) IN FIRST LINE
 					""".trimIndent()
 				setHeader(header.replace("{changeset}",changeset))
 				setName(changeSetName)
