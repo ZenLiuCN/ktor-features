@@ -80,9 +80,10 @@ object EbeanUtil {
 			.apply {
 				platform?.let { setPlatform(platform) }
 				setHeader(
-					"""
-				--liquibase formatted sql
-				--changeset $user-${now("YYYYMMdd")}:$changeSetName
+				"""
+				-- this is generated form ktor-features:EbeanUtil should not edit
+				-- liquibase formatted sql
+				-- changeset $user-${now("YYYYMMdd")}:$changeSetName
 				""".trimIndent())
 				setName(changeSetName)
 				setVersion("$majorVersion.$minorVersion.$typeNumber")
