@@ -13,6 +13,7 @@
         <module>ez-liquibase</module>
         <module>ez-caffeine</module>
         <module>ez-kmongo</module>
+        <module>ez-ignite</module>
     </modules>
     <groupId>cn.zenliu.ktor</groupId>
     <artifactId>ktor-features</artifactId>
@@ -37,7 +38,7 @@
         <snakeyaml.version>1.12</snakeyaml.version>
         <caffeine.version>2.8.1</caffeine.version>
         <kmongo.version>3.11.2</kmongo.version>
-
+        <ignite.version>2.8.0</ignite.version>
     </properties>
     <repositories>
         <repository>
@@ -311,6 +312,69 @@
                 <version>${snakeyaml.version}</version>
                 <scope>provided</scope>
                 <optional>true</optional>
+            </dependency>
+            <!--  ignite-->
+            <!-- https://mvnrepository.com/artifact/org.apache.ignite/ignite-core -->
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-core</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-indexing</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-log4j</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-log4j2</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-jta</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-slf4j</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-ssh</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-urideploy</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-aop</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-visor-console</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <!-- ignite LGPL -->
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-schedule</artifactId>
+                <version>${ignite.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ignite</groupId>
+                <artifactId>ignite-geospatial</artifactId>
+                <version>${ignite.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
