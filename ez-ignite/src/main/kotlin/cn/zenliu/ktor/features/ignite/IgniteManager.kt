@@ -64,30 +64,12 @@ class IgniteManager {
 
 		private val logger = LoggerFactory.getLogger(this::class.java)
 
-		//below are helpers
-		object group {
-			val cluster get() = ignite.cluster()
-			val remotes get() = cluster.forRemotes()
-			val random get() = cluster.forRandom()
-			val local get() = cluster.forLocal()
-			val oldest get() = cluster.forOldest()
-			val youngest get() = cluster.forYoungest()
-			val clients get() = cluster.forClients()
-			val servers get() = cluster.forServers()
-			val predict = { predict: (ClusterNode) -> Boolean ->
-				cluster.forPredicate(predict)
-			}
-			val attribute ={key:String,value:Any? ->
-				cluster.forAttribute(key,value)
-			}
-			//ext
-			val IgniteCluster.local get() = forLocal()
-			val IgniteCluster.remotes get() = forRemotes()
-			val IgniteCluster.random get() = forRandom()
-			val IgniteCluster.oldest get() = forOldest()
-			val IgniteCluster.youngest get() = forYoungest()
-			val IgniteCluster.clients get() = forClients()
-			val IgniteCluster.servers get() = forServers()
-		}
+		val IgniteCluster.local get() = forLocal()
+		val IgniteCluster.remotes get() = forRemotes()
+		val IgniteCluster.random get() = forRandom()
+		val IgniteCluster.oldest get() = forOldest()
+		val IgniteCluster.youngest get() = forYoungest()
+		val IgniteCluster.clients get() = forClients()
+		val IgniteCluster.servers get() = forServers()
 	}
 }
