@@ -65,6 +65,7 @@ class Hikari private constructor() {
 				var url: String,
 				var username: String? = null,
 				var password: String? = null,
+				var driverClassName: String? = null,
 				var poolSize: Int = 1,
 				var cachePrepStmts: Boolean = true,
 				var prepStmtCacheSize: Int = 250,
@@ -85,6 +86,7 @@ class Hikari private constructor() {
 				var transactionIsolation: String? = null,
 				var registerMbeans: Boolean = false,
 				var minimumIdle: Int=1,
+				var dataSourceProperty:Map<String,Any>?=null,
 				var extra: MutableMap<String, HikariConf> = mutableMapOf()
 		)
 
@@ -92,17 +94,27 @@ class Hikari private constructor() {
 		 * HikariCP Datasource
 		 */
 		val datasource by lazy {
-			generateDatasource(this.config!!)
+			generateDatasource(null,this.config!!)
 		}
 		/**
 		 * Other Datasource config by extra
 		 */
 		val other by lazy {
 			this.config!!.extra.map { (k, v) ->
-				k to lazy { generateDatasource(v) }
+				k to lazy { generateDatasource(k,v) }
 			}.toMap()
 		}
-		private fun generateDatasource(conf: HikariConf) = HikariDataSource(HikariConfig().apply {
+		private var configInject:(HikariConfig.(name:String?)->HikariConfig)?=null
+
+		/**
+		 * set some inject function before create datasource
+		 * @param ij [@kotlin.ExtensionFunctionType] Function2<HikariConfig, [@kotlin.ParameterName] String?, HikariConfig>
+		 */
+		fun setConfigInject(ij:HikariConfig.(name:String?)->HikariConfig){
+			configInject=ij
+		}
+		private fun generateDatasource(name:String?,conf: HikariConf) = HikariDataSource(HikariConfig().apply {
+			conf.driverClassName?.let{driverClassName=it}
 			jdbcUrl = conf.url
 			username=conf.username
 			isIsolateInternalQueries=conf.isolateInternalQueries
@@ -135,6 +147,9 @@ class Hikari private constructor() {
 				"prepStmtCacheSqlLimit",
 				conf.prepStmtCacheSqlLimit
 			)
-		})
+			conf.dataSourceProperty?.forEach { t, u ->
+				addDataSourceProperty(t,u)
+			}
+		}.let { configInject?.invoke(it,name)?:it })
 	}
 }
