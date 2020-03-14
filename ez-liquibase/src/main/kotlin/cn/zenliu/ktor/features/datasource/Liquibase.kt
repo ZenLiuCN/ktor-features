@@ -56,7 +56,7 @@ class Liquibase private constructor() {
                 var datasource: String = "",
                 var other: Set<LiquibaseConf> = emptySet()
         )
-
+		private var resourceAccessor:ResourceAccessor=CompositeResourceAccessor(FileSystemResourceAccessor(),ClassLoaderResourceAccessor())
         private var hasHikari: Boolean = true
         private lateinit var ds: DataSource
         private fun validate() {
@@ -95,6 +95,13 @@ class Liquibase private constructor() {
             this.ds = ds
         }
 
+	    /**
+	     * add self define resourceAccessor
+	     * @param ra ResourceAccessor
+	     */
+		fun setResourceAccessor(ra: ResourceAccessor){
+			this.resourceAccessor=ra
+		}
         private fun getConnection(conf: LiquibaseConf) = when {
             hasHikari && conf.datasource.isNotBlank() -> Hikari.other[conf.datasource]?.value?.connection
             hasHikari && conf.datasource.isBlank() && !this::ds.isInitialized -> Hikari.datasource.connection
@@ -159,11 +166,11 @@ class Liquibase private constructor() {
             }
         }
 
-        private fun createLiquibase(c: Connection?, conf: LiquibaseConf) = ClassLoaderResourceAccessor().let { cra ->
+        private fun createLiquibase(c: Connection?, conf: LiquibaseConf) =
             Liquibase(
                     conf.changeLog,
-                    cra,
-                    createDatabase(c, cra, conf)
+	                 resourceAccessor,
+                    createDatabase(c, resourceAccessor, conf)
             ).apply {
                 this.isIgnoreClasspathPrefix = conf.ignoreClasspathPrefix
                 conf.parameter.takeIf { it.isNotEmpty() }?.forEach { k, v ->
@@ -173,7 +180,7 @@ class Liquibase private constructor() {
                     this.dropAll()
                 }
             }
-        }
+
 
         private fun createDatabase(c: Connection?, ra: ResourceAccessor, conf: LiquibaseConf) =
                 (c?.let { JdbcConnection(c) }
@@ -221,25 +228,5 @@ class Liquibase private constructor() {
                 this.database?.close()
             }
         }
-
-/*		private class ResourceOpener(private val changeLog: String):ClassLoaderResourceAccessor(){
-			override fun list(relativeTo: String?, path: String?, includeFiles: Boolean, includeDirectories: Boolean, recursive: Boolean): MutableSet<String> {
-				return super.list(relativeTo, path, includeFiles, includeDirectories, recursive)
-			}
-
-			override fun toString(): String {
-				return super.toString()
-			}
-
-			override fun getResourcesAsStream(path: String?): MutableSet<InputStream> {
-				return super.getResourcesAsStream(path)
-			}
-
-			override fun toClassLoader(): ClassLoader {
-				return super.toClassLoader()
-			}
-		}*/
-
-
     }
 }
