@@ -23,8 +23,8 @@
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <kotlin.version>1.3.61</kotlin.version>
-        <ebean.version>12.1.12</ebean.version>
+        <kotlin.version>1.3.70</kotlin.version>
+        <ebean.version>12.1.13</ebean.version>
         <ktor.version>1.3.0</ktor.version>
         <logback.version>1.2.3</logback.version>
         <config4k.version>0.4.1</config4k.version>
@@ -33,7 +33,7 @@
         <lettuce.version>5.2.2.RELEASE</lettuce.version>
         <reactor.version>3.3.2.RELEASE</reactor.version>
         <reactor-kotlin.version>1.0.2.RELEASE</reactor-kotlin.version>
-        <liquibase.version>3.8.6</liquibase.version>
+        <liquibase.version>3.8.7</liquibase.version>
         <jooq.version>3.13.0</jooq.version>
         <snakeyaml.version>1.12</snakeyaml.version>
         <caffeine.version>2.8.1</caffeine.version>
