@@ -34,6 +34,7 @@ class Proxy private constructor() {
 			}
 			config ?: throw Exception("Proxy configuration invalid!")
 			this.apply(configure)
+			generateRoute()
 			install(pipeline)
 			return this
 		}
@@ -85,39 +86,52 @@ class Proxy private constructor() {
 		) {
 			fun getHttpMethod() = HttpMethod.parse(method)
 		}
-
+		private var installed:Boolean=false
+		private val route:MutableSet<ProxyRoute> = mutableSetOf()
 		private val uriGenerators: MutableMap<String, UriGenerator> = mutableMapOf(
-			"prefix" to { uri, route -> uri.replace(route.substringBefore("{"), "") },
+			"prefix" to { uri, route -> uri.replace(route.substringBefore("{"), "/") },
 			"direct" to { uri, _ -> uri }
 		)
 		private val logger = LoggerFactory.getLogger(this::class.java)
 		private val headerGenerators: MutableMap<String, HeaderGenerator> = mutableMapOf()
 		private val requestIntercepters: MutableMap<String, RequestInterceptor> = mutableMapOf()
 		private val responseProcessors: MutableMap<String, ResponseProcessor> = mutableMapOf()
-
+		fun generateRoute(){
+			if(installed)throw  Throwable("proxy route already installed")
+			route.addAll(config!!.route.map { it.toRoute() })
+		}
 		fun registerResponseProcessor(name: String, act: ResponseProcessor) {
+			if(installed)throw  Throwable("proxy route already installed")
 			responseProcessors.put(name, act)
 		}
 
 		fun registerUriGenerator(name: String, act: UriGenerator) {
+			if(installed)throw  Throwable("proxy route already installed")
 			uriGenerators.put(name, act)
 		}
 
 		fun registerHeaderGenerator(name: String, act: HeaderGenerator) {
+			if(installed)throw  Throwable("proxy route already installed")
 			headerGenerators.put(name, act)
 		}
 
 		fun registerRequestIntercepter(name: String, act: RequestInterceptor) {
+			if(installed)throw  Throwable("proxy route already installed")
 			requestIntercepters.put(name, act)
 		}
 
-		fun config(act: ProxyConf.() -> Unit) = act.invoke(this.config!!)
+		fun updateConfig(act: ProxyConf.() -> Unit) = act.invoke(this.config!!)
+		fun addRoute(route:ProxyRoute){
+			this.route.add(route)
+		}
 		fun configHttpClient(act: () -> HttpClient) {
+			if(installed)throw  Throwable("proxy route already installed")
 			this.httpGenerator = act
 		}
 
 		fun install(app: Application) {
 			if (config!!.enable) {
+				installed=true
 				loggingDebug { "registry of headerGenerators =>${headerGenerators.keys}" }
 				loggingDebug { "registry of uriGenerators =>${uriGenerators.keys}" }
 				loggingDebug { "registry of requestIntercepters =>${requestIntercepters.keys}" }

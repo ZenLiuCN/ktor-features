@@ -18,17 +18,15 @@ internal class FeatureTest {
 				configHttpClient {
 					HttpClient(OkHttp)
 				}
-				config {
+				updateConfig {
 					this.debug = true
-					this.route.addAll(setOf(
-						Proxy.ProxyFeature.ProxyRoute(
-							"GET",
-							"/proxy/{any...}",
-							"http://39.100.6.164:9543/echo",
-							{ url -> url.replace("/proxy", "") }
-						)
-					))
 				}
+				addRoute(Proxy.ProxyFeature.ProxyRoute(
+					"GET",
+					"/proxy/{any...}",
+					"http://39.100.6.164:9543/echo",
+					{ url,_ -> url.replace("/proxy", "/") }
+				))
 			}
 		}) {
 			handleRequest(HttpMethod.Get, "/proxy") {
