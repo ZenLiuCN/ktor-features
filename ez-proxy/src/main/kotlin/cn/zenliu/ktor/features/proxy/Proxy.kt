@@ -57,7 +57,7 @@ class Proxy private constructor() {
 			val responseProcessor: String? = null
 		) {
 			fun toRoute() = ProxyRoute(
-				method, route, domain,
+				HttpMethod.parse(method), route, domain,
 				uriGenerator.let { uriGenerators[it] ?: throw Throwable("uriGenerator of $it is not in registry") },
 				requestHeaderGenerator?.let {
 					headerGenerators[it] ?: throw Throwable("headerGenerator of $it is not in registry")
@@ -75,7 +75,7 @@ class Proxy private constructor() {
 		}
 
 		data class ProxyRoute(
-			val method: String = "GET",
+			val method: HttpMethod ,
 			val route: String,
 			val domain: String,
 			val uriGenerator: UriGenerator,
@@ -83,13 +83,11 @@ class Proxy private constructor() {
 			val responseHeaderGenerator: HeaderGenerator? = null,
 			val requestIntercepter: RequestInterceptor? = null,
 			val responseProcessor: ResponseProcessor? = null
-		) {
-			fun getHttpMethod() = HttpMethod.parse(method)
-		}
+		)
 		private var installed:Boolean=false
 		private val route:MutableSet<ProxyRoute> = mutableSetOf()
 		private val uriGenerators: MutableMap<String, UriGenerator> = mutableMapOf(
-			"prefix" to { uri, route -> uri.replace(route.substringBefore("{"), "/") },
+			"prefix" to { uri, route -> uri.replace(route.substringBefore("/{"), "/") },
 			"direct" to { uri, _ -> uri }
 		)
 		private val logger = LoggerFactory.getLogger(this::class.java)
@@ -98,7 +96,12 @@ class Proxy private constructor() {
 		private val responseProcessors: MutableMap<String, ResponseProcessor> = mutableMapOf()
 		fun generateRoute(){
 			if(installed)throw  Throwable("proxy route already installed")
+			loggingDebug { "registry of headerGenerators =>${headerGenerators.keys}" }
+			loggingDebug { "registry of uriGenerators =>${uriGenerators.keys}" }
+			loggingDebug { "registry of requestIntercepters =>${requestIntercepters.keys}" }
+			loggingDebug { "registry of responseProcessors =>${responseProcessors.keys}" }
 			route.addAll(config!!.route.map { it.toRoute() })
+			loggingDebug { "routes are ${route}"  }
 		}
 		fun registerResponseProcessor(name: String, act: ResponseProcessor) {
 			if(installed)throw  Throwable("proxy route already installed")
@@ -132,16 +135,11 @@ class Proxy private constructor() {
 		fun install(app: Application) {
 			if (config!!.enable) {
 				installed=true
-				loggingDebug { "registry of headerGenerators =>${headerGenerators.keys}" }
-				loggingDebug { "registry of uriGenerators =>${uriGenerators.keys}" }
-				loggingDebug { "registry of requestIntercepters =>${requestIntercepters.keys}" }
-				loggingDebug { "registry of responseProcessors =>${responseProcessors.keys}" }
 				app.routing {
 					ifDebug { trace { application.log.info(it.buildText()) } }
-					config!!.route.forEach {
-						val route = it.toRoute()
-						route(route.route, route.getHttpMethod(), {
-							handle(doProxy(route))
+					route.forEach {
+						route(it.route, it.method, {
+							handle(doProxy(it))
 						})
 					}
 				}
@@ -154,13 +152,14 @@ class Proxy private constructor() {
 		private val client by lazy { httpGenerator() }
 
 		private fun doProxy(px: ProxyRoute): PipelineInterceptor<Unit, ApplicationCall> = {
-			val target = call.request.uri.let { px.uriGenerator.invoke(px.route, it) }
+			val target = call.request.uri.let { px.uriGenerator.invoke( it,px.route) }
 			if (target == null) {
 				ifDebug { "${call.request.uri} filter to null by ${px}" }
 				call.respond(HttpStatusCode.NotFound)
 			} else {
-				val response = client.request<HttpResponse>("${px.domain}$target") {
-					method = px.getHttpMethod()
+				val targetUrl="${px.domain}$target".replace("//","/").replace(":/","://")
+				val response = client.request<HttpResponse>(targetUrl) {
+					method = px.method
 					headers.appendAll(
 						call.request.headers.let { px.requestHeaderGenerator?.invoke(it) ?: it }.filter { key, _ ->
 							!key.equals(HttpHeaders.ContentType, ignoreCase = true)
@@ -168,7 +167,7 @@ class Proxy private constructor() {
 								&& !key.equals(HttpHeaders.TransferEncoding, ignoreCase = true)
 								&& !key.equals(HttpHeaders.Upgrade, ignoreCase = true)
 						})
-					ifDebug { application.environment.log.info("proxy to ${px.domain}$target with $headers  by ${px}") }
+					ifDebug { application.environment.log.info("proxy to $targetUrl with ${headers.build()}  by ${px}") }
 					val ctxLen = call.request.headers[HttpHeaders.ContentLength]?.toLongOrNull()
 					val ctxType = call.request.headers[HttpHeaders.ContentType]?.let { ContentType.parse(it) }
 					if (ctxLen != null && ctxLen > 0) {

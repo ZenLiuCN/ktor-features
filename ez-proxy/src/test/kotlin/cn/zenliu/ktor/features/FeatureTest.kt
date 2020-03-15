@@ -12,32 +12,36 @@ import kotlin.test.*
 
 internal class FeatureTest {
 	@Test
-	fun testLiquibase() {
+	fun testProxy() {
 		withTestApplication({
 			install(Proxy) {
 				configHttpClient {
-					HttpClient(OkHttp)
+					HttpClient(OkHttp){
+
+					}
 				}
 				updateConfig {
 					this.debug = true
 				}
 				addRoute(Proxy.ProxyFeature.ProxyRoute(
-					"GET",
+					HttpMethod.Get,
 					"/proxy/{any...}",
-					"http://39.100.6.164:9543/echo",
-					{ url,_ -> url.replace("/proxy", "/") }
+					"http://whatismyip.akamai.com",
+					{ uri,route ->
+						uri.replace(route.substringBefore("/{"), if(uri.endsWith("/")) "/" else "")
+					}
 				))
 			}
 		}) {
 			handleRequest(HttpMethod.Get, "/proxy") {
 			}.apply {
-				assertEquals(response.status()?.value,200)
-				assertEquals(response.contentType(),ContentType.Text.Plain.withParameter("charset","UTF-8"))
+				assertEquals(200,response.status()?.value)
+				assertEquals(ContentType.Text.Html,response.contentType())
 			}
 			handleRequest(HttpMethod.Get, "/proxy?b64=true") {
 			}.apply {
-				assertEquals(response.status()?.value,200)
-				assertEquals(response.contentType(),ContentType.Text.Plain.withParameter("charset","UTF-8"))
+				assertEquals(200,response.status()?.value)
+				assertEquals(ContentType.Text.Html,response.contentType())
 			}
 		}
 	}
