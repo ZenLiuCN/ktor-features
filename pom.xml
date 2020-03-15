@@ -11,6 +11,7 @@
         <module>ez-ebean</module>
         <module>ez-logback</module>
         <module>ez-liquibase</module>
+        <module>ez-proxy</module>
         <module>ez-caffeine</module>
         <module>ez-kmongo</module>
         <module>ez-ignite</module>
