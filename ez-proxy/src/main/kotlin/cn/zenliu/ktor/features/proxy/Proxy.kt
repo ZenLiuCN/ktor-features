@@ -42,7 +42,6 @@ class Proxy private constructor() {
 		class ProxyConf(
 			var enable: Boolean = true,
 			var debug: Boolean = false,
-			val engine: String = "OKHTTP",
 			var route: MutableSet<ProxyRouteDefine> = mutableSetOf()
 		)
 
