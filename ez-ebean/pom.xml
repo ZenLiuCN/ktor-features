@@ -22,6 +22,11 @@
             <artifactId>ebean</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>cn.zenliu.ktor</groupId>
             <artifactId>ez-hikari</artifactId>
             <version>0.0.1-SNAPSHOT</version>
