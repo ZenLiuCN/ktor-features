@@ -14,7 +14,7 @@ import kotlin.reflect.*
  */
 data class CacheConfig<K : Any, V : Any>(
 	val name: String,
-	val builder:(() -> Caffeine<K, V>)
+	val builder:(() -> Cache<K, V>)
 )
 
 interface CacheBuilder {
