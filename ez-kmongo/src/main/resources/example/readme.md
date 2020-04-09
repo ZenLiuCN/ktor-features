@@ -1,4 +1,3 @@
-# ez-kmongo
 ref [kmongo](http://litote.org/kmongo/quick-start/)
 # use typesafe query
 ```xml

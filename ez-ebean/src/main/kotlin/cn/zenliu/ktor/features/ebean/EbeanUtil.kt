@@ -66,7 +66,8 @@ object EbeanUtil {
 		outputPath: String? = null,
 		backupPath: String? = null,
 		dataSource: DataSource? = null,
-		platform: Platform? = null
+		platform: Platform? = null,
+		configure:((DbMigration)->Unit)?=null
 	) {
 		if (dataSource == null && platform == null) throw Throwable("please set datasource or platform")
 		dataSource?.let {
@@ -93,6 +94,7 @@ object EbeanUtil {
 				resourcePath?.let { setPathToResources(File(it).absolutePath) }
 				setLogToSystemOut(true)
 				setIncludeGeneratedFileComment(true)
+				configure?.invoke(this)
 				generateMigration()?.let {
 					resourcePath ?: return
 					outputPath?.let { out ->
