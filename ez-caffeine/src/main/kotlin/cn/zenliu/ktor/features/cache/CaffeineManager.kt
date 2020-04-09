@@ -57,7 +57,7 @@ class CaffeineManager private constructor() {
 				.flatten()
 				.also { if (it.toSet().size != it.size) throw IllegalStateException("caffine may have duplicate cache") }
 				.forEach { cfg ->
-					cfg.builder.invoke(Caffeine.newBuilder()).apply { _caches.put(cfg.name, this) }
+					cfg.builder.invoke().apply { _caches.put(cfg.name, this) }
 				}
 			fromBuilder = true
 		}
