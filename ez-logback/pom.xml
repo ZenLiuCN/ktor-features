@@ -13,7 +13,7 @@
         <dependency>
             <groupId>cn.zenliu.ktor</groupId>
             <artifactId>properties</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

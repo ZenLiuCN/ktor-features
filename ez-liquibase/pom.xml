@@ -15,7 +15,7 @@
         <dependency>
             <groupId>cn.zenliu.ktor</groupId>
             <artifactId>properties</artifactId>
-            <version>${project.parent.version}</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>cn.zenliu.ktor</groupId>
             <artifactId>ez-hikari</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
