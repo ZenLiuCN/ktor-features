@@ -2,15 +2,13 @@
 
 package cn.zenliu.ktor.features.consul.internal
 
+import cn.zenliu.ktor.features.consul.internal.dto.*
 import io.ktor.client.HttpClient
 import io.ktor.client.request.*
+import io.ktor.http.ContentType
 import io.ktor.http.content.ByteArrayContent
-import io.ktor.http.fromHttpDateString
-import io.ktor.http.toHttpDateString
-import kotlinx.serialization.*
-import java.text.SimpleDateFormat
+import kotlinx.serialization.ContextualSerialization
 import java.time.Instant
-import java.time.format.DateTimeFormatter
 
 
 class ConsulClient(
@@ -27,144 +25,95 @@ interface BaseClient {
     val http: HttpClient
     fun json() = io.ktor.client.features.json.defaultSerializer()
     fun uriRoot() = "http://$host:$port"
-    fun attackToken(builder: HttpRequestBuilder): HttpRequestBuilder
+    fun attachToken(builder: HttpRequestBuilder): HttpRequestBuilder
 }
 
-interface AclClient : BaseClient {
-    override fun uriRoot(): String = "${super.uriRoot()}/acl"
-
-    @Serializable
-    data class Bootstrap(
-            val AccessorID: String,
-            val CreateIndex: Int,
-            @ContextualSerialization
-            val CreateTime: Instant,
-            val Description: String,
-            val Hash: String,
-            val ID: String,
-            val Local: Boolean,
-            val ModifyIndex: Int,
-            val Policies: List<Policy>,
-            val SecretID: String
-    )
+interface AgentClient : BaseClient {
+    override fun uriRoot(): String = "${super.uriRoot()}/agent"
 
 
-    suspend fun bootstrap() = http
-            .put<Bootstrap>("${uriRoot()}/bootstrap")
-
-    @Serializable
-    data class Replication(
-            val Enabled: Boolean,
-            val LastError: Instant,
-            val LastSuccess: Instant,
-            val ReplicatedIndex: Int,
-            val ReplicatedTokenIndex: Int,
-            val ReplicationType: String,
-            val Running: Boolean,
-            val SourceDatacenter: String
-    )
-
-    suspend fun replication(dataCenter: String?) = http
-            .get<Replication>("${uriRoot()}/replication") {
-                dataCenter?.let {
-                    parameter("dc", it)
-                }
+    //region Common
+    suspend fun member(wan: Boolean = false, segment: String? = null) = http
+            .get<List<AgentMemberInfo>>("${uriRoot()}/members") {
+                wan.takeIf { it }?.let { parameter("wan", it) }
+                segment?.let { parameter("segment", it) }
+                attachToken(this)
             }
 
-    @Deprecated("only for consul >1.4.0,will be removed in futrue")
-    suspend fun translateRule(rule: String) = http
-            .post<String>("${uriRoot()}/rules/translate") {
-                body = ByteArrayContent(rule.toByteArray())
+    suspend fun self() = http
+            .get<AgentInfo>("${uriRoot()}/self") {
+                attachToken(this)
             }
 
-    @Deprecated("only for consul >1.4.0,will be removed in futrue")
-    suspend fun translateAccessorIdRule(accessorId: String) = http
-            .get<String>("${uriRoot()}/rules/translate/$accessorId")
-
-    /**
-     *
-     * @property AuthMethod String
-     * @property BearerToken String
-     * @property Meta Map<String, String>?
-     * @property Namespace String? Enterprise Only
-     * @constructor
-     */
-    data class LoginRequest(
-            val AuthMethod: String,
-            val BearerToken: String,
-            val Meta: Map<String, String>? = null,
-            val Namespace: String? = null
-    )
-
-    suspend fun login(login: LoginRequest) = http
-            .get<Login>("${uriRoot()}/login") {
-                body = json().write(login)
+    suspend fun reload() = http
+            .put<String>("${uriRoot()}/reload") {
+                attachToken(this)
             }
 
-    @Serializable
-    data class Login(
-            val AccessorID: String,
-            val AuthMethod: String,
-            val CreateIndex: Int,
-            val CreateTime: Instant,
-            val Description: String,
-            val Hash: String,
-            val Local: Boolean,
-            val ModifyIndex: Int,
-            val Roles: List<Role>,
-            val SecretID: String,
-            val ServiceIdentities: List<ServiceIdentity>
-    )
+    suspend fun maintenance(enable: Boolean, reason: String? = "") = http
+            .get<String>("${uriRoot()}/maintenance") {
+                parameter("enable", enable)
+                reason?.let { parameter("reason", it) }
+                attachToken(this)
 
-    @Serializable
-    data class Role(
-            val ID: String,
-            val Name: String
-    )
+            }
 
-    @Serializable
-    data class ServiceIdentity(
-            val ServiceName: String
-    )
+    suspend fun metrics(format: String? = null) = http
+            .get<AgentMemberInfo>("${uriRoot()}/metrics") {
+                attachToken(this)
+            }
 
-    suspend fun loginout() = http
-            .post<Login>("${uriRoot()}/loginout")
+    suspend fun monitor(logLevel: String? = null, logJson: Boolean = false) = http
+            .get<String>("${uriRoot()}/monitor") {
+                parameter("logjson", logJson)
+                logLevel?.let { parameter("loglevel", logLevel) }
+                attachToken(this)
+            }
+    //endregion
 
-    @Serializable
-    data class TokenRequest(
-            @SerialName("Description")
-            val description: String, // Agent token for 'node1'
-            @SerialName("Local")
-            val local: Boolean, // false
-            @SerialName("Policies")
-            val policies: List<Policy>
-    )
+    //region Register
+    suspend fun join(address: String, wan: Boolean = false) = http
+            .put<String>("${uriRoot()}/join/$address") {
+                wan.takeIf { it }?.let { parameter("wan", it) }
+                attachToken(this)
+            }
 
-    @Serializable
-    data class Policy(
-            @SerialName("ID")
-            val iD: String, // 165d4317-e379-f732-ce70-86278c4558f7
-            @SerialName("Name")
-            val name: String // node-read
-    )
+    suspend fun leave() = http
+            .put<String>("${uriRoot()}/leave") {
+                attachToken(this)
+            }
 
-    suspend fun token() = http
-            .post<Login>("${uriRoot()}/token")
+    suspend fun forceLeave(node: String, prune: Boolean = false) = http
+            .put<String>("${uriRoot()}/force-leave/${buildString { append(node);if (prune) append("?prune") }}") {
+                attachToken(this)
+            }
+    //endregion
 
-
-}
-
-@Serializer(forClass = Instant::class)
-object InstantSerializer : KSerializer<Instant> {
-    private val format = DateTimeFormatter.ISO_INSTANT
-    override val descriptor: SerialDescriptor = PrimitiveDescriptor("JvmInstant", PrimitiveKind.STRING)
-
-    override fun deserialize(decoder: Decoder): Instant {
-        return Instant.from(format.parse(decoder.decodeString()))
+    //region Tokens
+    suspend fun updateToken(token: String,type:AgentUpdateTokenType) = http
+            .put<String>("${uriRoot()}/token/${type.code}") {
+                attachToken(this)
+                body = ByteArrayContent("""{"Token":"$token"}""".toByteArray(), ContentType.Application.Json)
+            }
+    enum class AgentUpdateTokenType(val code:String){
+        default("default"),
+        agent("agent"),
+        agentMaster("agent_master"),
+        replication("replication"),
     }
+    //endregion
+    //region Checks
+    suspend fun checks(filter: String?=null) = http
+            .get<AgentCheckInfo>("${uriRoot()}/checks") {
+                filter?.let { parameter("filter", it) }
+                attachToken(this)
+            }
+    suspend fun checkRegister(filter: String?=null) = http
+            .get<AgentCheckInfo>("${uriRoot()}/check/register") {
+                filter?.let { parameter("filter", it) }
+                attachToken(this)
+            }
 
-    override fun serialize(encoder: Encoder, value: Instant) {
-        encoder.encodeString(format.format(value))
-    }
+    //endregion
 
 }
