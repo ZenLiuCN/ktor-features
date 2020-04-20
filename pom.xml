@@ -16,6 +16,7 @@
         <module>ez-kmongo</module>
         <module>ez-ignite</module>
         <module>ez-consul</module>
+            <module>ez-camunda</module>
     </modules>
     <groupId>cn.zenliu.ktor</groupId>
     <artifactId>ktor-features</artifactId>
