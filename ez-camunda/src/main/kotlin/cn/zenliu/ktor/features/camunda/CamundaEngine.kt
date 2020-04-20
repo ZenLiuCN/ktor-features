@@ -13,14 +13,13 @@ import java.time.Duration
 import kotlin.reflect.KClass
 
 class CamundaEngine private constructor() {
-    companion
-    object CamundaFeature : FeatureTemplate.FeatureObjectTemplate<Application, CamundaFeature, CamundaFeature, CamundaFeature.CamundaConf>() {
+    companion object CamundaFeature : FeatureTemplate.FeatureObjectTemplate<Application, CamundaFeature, CamundaFeature, CamundaFeature.CamundaConf>() {
         override val configClazz: KClass<CamundaConf> = CamundaConf::class
         override fun init(pipeline: Application, configure: CamundaFeature.() -> Unit): CamundaFeature {
             pipeline.attributes.computeIfAbsent(PropertiesManager.key) {
                 pipeline.install(PropertiesManager)
             }
-            config ?: throw Exception("Camunda configuration invalid!")
+            //config ?: throw Exception("Camunda configuration invalid!")
             this.apply(configure)
             pipeline.environment.monitor.subscribe(ApplicationStopPreparing) {
                 close()
@@ -35,8 +34,8 @@ class CamundaEngine private constructor() {
 
         private lateinit var procEngine: ProcessEngine
         val engine by lazy {
-            procEngine.takeIf { this::procEngine.isInitialized }
-                    ?: throw IllegalStateException("process engine invalid")
+
+            procEngine
         }
         val reopsitory by lazy { procEngine.repositoryService }
         val runtime by lazy { procEngine.runtimeService }
@@ -59,13 +58,13 @@ class CamundaEngine private constructor() {
          * @return Unit
          */
         fun configurate(conf: ProcessEngineConfiguration? = null,
-                        doWithEngine: (ProcessEngine.() -> Unit)? = null,
-                        config: ProcessEngineConfiguration.() -> Unit
+                        config: ProcessEngineConfiguration.() -> Unit,
+                        doWithEngine: ProcessEngine.() -> Unit
         ) {
             procEngine = (conf ?: ProcessEngineConfiguration.createStandaloneProcessEngineConfiguration())
                     .apply(config)
                     .buildProcessEngine()
-            doWithEngine?.invoke(procEngine)
+            doWithEngine.invoke(procEngine)
         }
 
         fun newEngine(replace: Boolean = true,
