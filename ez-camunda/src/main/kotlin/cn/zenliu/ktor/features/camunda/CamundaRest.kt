@@ -2,15 +2,19 @@ package cn.zenliu.ktor.features.camunda
 
 import java.lang.ref.SoftReference
 
-class CamundaRest private constructor() {
+
+class CamundaHistoryApi private constructor() {
     fun historyCleanUp() = CamundaEngine.history.cleanUpHistoryAsync()
-    fun historyInstance()=CamundaEngine.history
+    fun historyInstance() = CamundaEngine.history
             .createCleanableHistoricCaseInstanceReport()
 
-        companion object {
-        private var ref: SoftReference<CamundaRest> = SoftReference(CamundaRest())
+    companion object {
+        @JvmStatic
+        private var ref =  SoftReference(CamundaHistoryApi())
+
+        @JvmStatic
         val INSTANT
-            get
-            () = if (ref.get() != null) ref.get() else CamundaRest().apply { ref = SoftReference(this) }
+            get() = ref.get() ?: CamundaHistoryApi().apply { ref = SoftReference(this) }
+
     }
 }
