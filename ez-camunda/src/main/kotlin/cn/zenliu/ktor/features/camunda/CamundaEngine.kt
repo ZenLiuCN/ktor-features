@@ -33,10 +33,7 @@ class CamundaEngine private constructor() {
         )
 
         private lateinit var procEngine: ProcessEngine
-        val engine by lazy {
-
-            procEngine
-        }
+        val engine by lazy { procEngine }
         val reopsitory by lazy { procEngine.repositoryService }
         val runtime by lazy { procEngine.runtimeService }
         val task by lazy { procEngine.taskService }
