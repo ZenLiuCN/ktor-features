@@ -1,13 +1,8 @@
 package cn.zenliu.ktor.features.camunda
 
 import io.ktor.application.install
-import io.ktor.http.ContentType
-import io.ktor.http.HttpMethod
-import io.ktor.server.testing.contentType
-import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.withTestApplication
 import org.camunda.bpm.engine.ProcessEngineConfiguration
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
 internal class CamundaEngineTest {
@@ -15,7 +10,7 @@ internal class CamundaEngineTest {
     fun testCamundaEngine() {
         withTestApplication({
             install(CamundaEngine) {
-                configurate(
+                configure(
                         ProcessEngineConfiguration
                                 .createStandaloneInMemProcessEngineConfiguration(),
                         {
