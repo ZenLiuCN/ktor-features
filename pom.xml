@@ -33,7 +33,7 @@
         <ebean.version>12.2.4</ebean.version>
         <logback.version>1.2.3</logback.version>
         <config4k.version>0.4.2</config4k.version>
-        <jackson.version>2.12.1</jackson.version>
+        <jackson.version>2.12.6.1</jackson.version>
         <hikari.version>3.4.2</hikari.version>
         <lettuce.version>5.2.2.RELEASE</lettuce.version>
         <reactor.version>3.3.4.RELEASE</reactor.version>
